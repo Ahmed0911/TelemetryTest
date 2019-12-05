@@ -26,8 +26,6 @@ int main()
 	for (int i = 0; i != 1000; i++)
 	{
 		// get data from node
-		TelemetryStream& ts = telemetry.getStream();
-		node.getTelemetryData(ts);
 		node.getTelemetryData(telemetry);
 
 		telemetry.run();

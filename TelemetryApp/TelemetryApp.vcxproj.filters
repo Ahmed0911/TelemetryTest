@@ -38,5 +38,8 @@
     <ClInclude Include="TestNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TelemetryStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

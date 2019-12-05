@@ -95,6 +95,7 @@
   <ItemGroup>
     <ClInclude Include="Node.h" />
     <ClInclude Include="TelemetryHandler.h" />
+    <ClInclude Include="TelemetryStream.h" />
     <ClInclude Include="TestNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -6,43 +6,12 @@
  */
 
 #pragma once
-#include <memory>
 //#include <dw/core/Context.h>
 //#include <dw/sensors/Sensors.h>
 typedef int dwContextHandle_t;
 typedef int dwSALHandle_t;
 
-class TelemetryHandler;
-
-class TelemetryStream
-{
-public:
-	TelemetryStream(uint32_t bufferSize) : _bufferSize{ bufferSize }, _index{ 0 }
-	{
-		_databuffer = std::make_unique<uint8_t[]>(_bufferSize);
-	}
-
-	bool writeToBuffer(void* ptr, uint32_t size)
-	{
-		bool writeOk = false;
-		if ((_index + size) < _bufferSize)
-		{
-			memcpy(_databuffer.get(), ptr, size);
-			_index += size;
-
-			writeOk = true;
-		}
-
-		return writeOk;
-	}
-
-private:
-	std::unique_ptr<uint8_t[]> _databuffer;
-	uint32_t _index;
-	uint32_t _bufferSize;
-
-	friend TelemetryHandler;
-};
+#include "TelemetryStream.h"
 
 class Node
 {
