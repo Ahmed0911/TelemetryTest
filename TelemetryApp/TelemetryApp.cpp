@@ -25,6 +25,8 @@ int main()
 	telemetry.create(SERVER);
 	for (int i = 0; i != 1000; i++)
 	{
+		node.run();
+
 		// get data from node
 		node.getTelemetryData(telemetry);
 

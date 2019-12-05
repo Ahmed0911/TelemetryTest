@@ -7,7 +7,7 @@ struct TestNodeData
 	uint32_t height;
 	uint32_t frameIndex;
 	uint32_t mirko;
-	uint64_t slavko;
+	int64_t slavko;
 };
 
 struct TestNodeDataAdd

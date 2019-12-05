@@ -40,6 +40,11 @@ void TelemetryHandler::run()
 	// send data
 	if (_udpSocket >= 0)
 	{
+		// Pack data to send!!
+		// TODO
+
+
+
 		// send some data
 		char buffer[10000];
 		int dataToSend = 1000;
@@ -59,9 +64,4 @@ void TelemetryHandler::destroy()
 	}
 	// kill stream
 	_telemetryStream.reset();
-}
-
-TelemetryStream& TelemetryHandler::getStream()
-{
-	return (*_telemetryStream);
 }

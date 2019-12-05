@@ -10,16 +10,12 @@ public:
 	void run();
 	void destroy();
 
-	TelemetryStream& getStream();
+	//TelemetryStream& getStream() { return *_telemetryStream; };
 	operator TelemetryStream& () { return *_telemetryStream; };
 
 private:
 	int _udpSocket = -1;
 	std::unique_ptr<TelemetryStream> _telemetryStream;
-
-
-	//bool addOutput(TelemetryStream& stream);
-	// addOutput()
 	// storeToDisk()
 	// sendToLTE()
 };
