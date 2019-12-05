@@ -87,11 +87,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="TelemetryApp.cpp" />
     <ClCompile Include="TelemetryHandler.cpp" />
+    <ClCompile Include="TestNode.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Node.h" />
     <ClInclude Include="TelemetryHandler.h" />
+    <ClInclude Include="TestNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

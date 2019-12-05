@@ -9,6 +9,9 @@
 #include <sys/socket.h>
 #endif
 
+constexpr uint32_t TelemetryServerPort = 13000;
+constexpr uint32_t TelemetryStreamBuferSize = 1024 * 1024;
+
 void TelemetryHandler::create(std::string serverIP)
 {
 	// create socket
@@ -18,7 +21,7 @@ void TelemetryHandler::create(std::string serverIP)
 	// "connect" to server, bind to random port will be done automagically on connect
 	sockaddr_in serveraddr{};
 	serveraddr.sin_family = AF_INET;
-	serveraddr.sin_port = htons(SERVERPORT); // port in server to send data
+	serveraddr.sin_port = htons(TelemetryServerPort); // port in server to send data
 	serveraddr.sin_addr.s_addr = inet_addr(serverIP.c_str());
 
 	// "connect" to server (use send/write instead of sendto)
@@ -27,6 +30,9 @@ void TelemetryHandler::create(std::string serverIP)
 		perror("connect failed");
 		return;  // TODO: throw exception
 	}
+
+	// create stream
+	_telemetryStream = std::make_unique<TelemetryStream>(TelemetryStreamBuferSize);
 }
 
 void TelemetryHandler::run()
@@ -51,4 +57,11 @@ void TelemetryHandler::destroy()
 	{
 		close(_udpSocket);
 	}
+	// kill stream
+	_telemetryStream.reset();
+}
+
+TelemetryStream& TelemetryHandler::getStream()
+{
+	return (*_telemetryStream);
 }

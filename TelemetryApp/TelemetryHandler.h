@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-
-#define SERVERPORT 13000
+#include <memory>
+#include "Node.h"
 
 class TelemetryHandler
 {
@@ -10,8 +10,15 @@ public:
 	void run();
 	void destroy();
 
+	TelemetryStream& getStream();
+	operator TelemetryStream& () { return *_telemetryStream; };
+
 private:
 	int _udpSocket = -1;
+	std::unique_ptr<TelemetryStream> _telemetryStream;
+
+
+	//bool addOutput(TelemetryStream& stream);
 	// addOutput()
 	// storeToDisk()
 	// sendToLTE()

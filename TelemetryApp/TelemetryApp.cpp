@@ -6,6 +6,7 @@
 #include <ws2tcpip.h>
 
 #include "TelemetryHandler.h"
+#include "TestNode.h"
 
 #define SERVER "192.168.0.11"
 
@@ -18,10 +19,17 @@ int main()
 	WSAStartup(MAKEWORD(2, 2), &wsaData);
 
 
+	TestNode node{};
+
 	TelemetryHandler telemetry;
 	telemetry.create(SERVER);
 	for (int i = 0; i != 1000; i++)
 	{
+		// get data from node
+		TelemetryStream& ts = telemetry.getStream();
+		node.getTelemetryData(ts);
+		node.getTelemetryData(telemetry);
+
 		telemetry.run();
 	}
 	telemetry.destroy();
