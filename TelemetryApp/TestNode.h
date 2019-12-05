@@ -29,4 +29,3 @@ private:
 	TestNodeData _data{};
 	TestNodeDataAdd _data2{}; // OPTIONAL: additional telemetry data
 };
-
