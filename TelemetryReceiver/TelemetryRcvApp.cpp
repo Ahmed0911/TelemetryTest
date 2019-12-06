@@ -16,7 +16,11 @@ int main()
 
 	TelemetryReceiver rcv;
 
-	rcv.ReceiveData();
+	// receive forever and ever
+	while (1)
+	{
+		rcv.ReceiveData();
+	}
 
 	WSACleanup();
 }

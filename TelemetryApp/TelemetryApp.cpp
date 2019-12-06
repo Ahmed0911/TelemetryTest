@@ -8,7 +8,7 @@
 #include "TelemetryHandler.h"
 #include "TestNode.h"
 
-#define SERVER "192.168.0.11"
+#define SERVER "172.21.20.38"
 
 int main()
 {
@@ -23,7 +23,8 @@ int main()
 
 	TelemetryHandler telemetry;
 	telemetry.create(SERVER);
-	for (int i = 0; i != 1000; i++)
+	//for (int i = 0; i != 1000; i++)
+	while (1)
 	{
 		node.run();
 
