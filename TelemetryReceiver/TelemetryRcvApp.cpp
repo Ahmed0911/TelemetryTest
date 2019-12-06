@@ -8,8 +8,6 @@
 
 int main()
 {
-    std::cout << "TelemetryRcvApp!\n";
-
 	// Init WS Stuff
 	WSADATA wsaData;
 	WSAStartup(MAKEWORD(2, 2), &wsaData);

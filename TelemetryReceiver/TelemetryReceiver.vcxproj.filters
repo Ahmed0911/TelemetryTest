@@ -26,5 +26,8 @@
     <ClInclude Include="TelemetryReceiver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TelemetryDataStructures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

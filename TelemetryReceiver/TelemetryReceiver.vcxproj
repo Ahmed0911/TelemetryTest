@@ -90,6 +90,7 @@
     <ClCompile Include="TelemetryReceiver.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TelemetryDataStructures.h" />
     <ClInclude Include="TelemetryReceiver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
