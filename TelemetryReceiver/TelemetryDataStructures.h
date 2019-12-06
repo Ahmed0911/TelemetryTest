@@ -57,4 +57,3 @@ struct NodePudzaStatistics
 	uint64_t EngineDeserializeTimeUS;
 	uint64_t EngineExecutionTimeUS;
 };
-

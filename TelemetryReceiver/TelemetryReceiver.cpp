@@ -7,7 +7,9 @@
 #include <winsock2.h>
 #define close closesocket
 #else
+#include <arpa/inet.h>
 #include <sys/socket.h>
+#include <unistd.h>
 #endif
 
 TelemetryReceiver::TelemetryReceiver()
@@ -62,7 +64,7 @@ bool TelemetryReceiver::ReceiveData()
 				case ApplicationID:
 				{
 					ApplicationStatistics data = *reinterpret_cast<ApplicationStatistics*>(recvBuffer.data() + bufferIndex);
-					std::cout << "--------ApplicationStatistics----------" << std::endl;
+					std::cout << "-------- Applications ----------" << std::endl;
 					std::cout << " mainLoopCounter: " << data.mainLoopCounter << "      " << std::endl;
 					std::cout << " mainLoopTimeUS: " << data.mainLoopTimeUS << "      " << std::endl;
 					std::cout << " commThreadPeriodUS: " << data.commThreadPeriodUS << "      " << std::endl;
@@ -73,7 +75,7 @@ bool TelemetryReceiver::ReceiveData()
 				case TelemetryHandlerID:
 				{
 					TelemetryHandlerStatistics data = *reinterpret_cast<TelemetryHandlerStatistics*>(recvBuffer.data() + bufferIndex);
-					std::cout << "--------TelemetryHandlerStatistics----------" << std::endl;
+					std::cout << "-------- TelemetryHandler ----------" << std::endl;
 					std::cout << " sentPackets: " << data.sentPackets << "      " << std::endl;
 					std::cout << " totalDataSize: " << data.totalDataSize << "      " << std::endl;
 					std::cout << " totalSentToAir: " << data.totalSentToAir << "      " << std::endl;
@@ -86,7 +88,7 @@ bool TelemetryReceiver::ReceiveData()
 				case CameraCaptureID:
 				{
 					CameraCaptureStatistics data = *reinterpret_cast<CameraCaptureStatistics*>(recvBuffer.data() + bufferIndex);
-					std::cout << "--------CameraCaptureStatistics----------" << std::endl;
+					std::cout << "-------- CameraCapture ----------" << std::endl;
 					std::cout << " completeOutputs: " << data.completeOutputs << "      " << std::endl;
 					std::cout << " incompleteOutputs: " << data.incompleteOutputs << "      " << std::endl;
 					std::cout << " thrashedOutputs: " << data.thrashedOutputs << "      " << std::endl;
@@ -96,9 +98,21 @@ bool TelemetryReceiver::ReceiveData()
 					std::cout << std::endl;
 					break;
 				}
+				case NodePudzaID:
+				{
+					NodePudzaStatistics data = *reinterpret_cast<NodePudzaStatistics*>(recvBuffer.data() + bufferIndex);
+					std::cout << "-------- NodePudza ----------" << std::endl;
+					std::cout << " EngineLoadTimeUS: " << data.EngineLoadTimeUS << "      " << std::endl;
+					std::cout << " EngineDeserializeTimeUS: " << data.EngineDeserializeTimeUS << "      " << std::endl;
+					std::cout << " EngineExecutionTimeUS: " << data.EngineExecutionTimeUS << "      " << std::endl;
+					std::cout << std::endl;
+					break;
+				}
 				default:
 				{
-					//std::cout << "Unknown data" << std::endl;
+					std::cout << "-------- Unknown Data ----------" << std::endl;
+					std::cout << " Unknown ID: 0x" << std::hex << chunk.objectID << std::dec << " !!!" << std::endl;
+					std::cout << std::endl;
 					break;
 				}
 			};
