@@ -3,6 +3,16 @@
 #include <memory>
 #include "Node.h"
 
+struct TelemetryHandlerStatistics
+{
+	uint64_t totalDataSize;
+	uint64_t totalSentToAir;
+	uint64_t totalStoredToDisk;
+	uint32_t sentPackets;
+	uint32_t failedPackets;
+	uint32_t overSizedChunks;
+};
+
 class TelemetryHandler
 {
 public:
@@ -16,6 +26,8 @@ public:
 private:
 	int _udpSocket = -1;
 	std::unique_ptr<TelemetryStream> _telemetryStream;
-	// storeToDisk()
-	// sendToLTE()
+	void storeToDisk();
+	void sendOverAir();
+
+	TelemetryHandlerStatistics _statistics{};
 };

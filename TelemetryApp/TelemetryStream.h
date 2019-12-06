@@ -26,11 +26,11 @@ public:
 		{
 			// write header
 			TelemetryChunkHeader hdr{ objectID, index, size };
-			memcpy(&_databuffer[_index], &hdr, sizeof(TelemetryChunkHeader));
+			std::memcpy(&_databuffer[_index], &hdr, sizeof(TelemetryChunkHeader));
 			_index += sizeof(TelemetryChunkHeader);
 
 			// write data
-			memcpy(&_databuffer[_index], dataPtr, size); 
+			std::memcpy(&_databuffer[_index], dataPtr, size);
 			_index += size;
 
 			writeOk = true;
@@ -40,9 +40,11 @@ public:
 	}
 
 private:
+	friend TelemetryHandler;	
+	void Clear() { _index = 0; };
+
 	std::unique_ptr<uint8_t[]> _databuffer;
 	uint32_t _index;
 	uint32_t _bufferSize;
 
-	friend TelemetryHandler;
 };

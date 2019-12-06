@@ -1,4 +1,5 @@
 #include "TelemetryHandler.h"
+#include <iostream>
 
 #if _WIN64
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
@@ -37,22 +38,15 @@ void TelemetryHandler::create(std::string serverIP)
 
 void TelemetryHandler::run()
 {
-	// send data
-	if (_udpSocket >= 0)
-	{
-		// Pack data to send!!
-		// TODO
+	// Send to Wifi/LTE
+	sendOverAir();
 
+	// Store localy on disk
+	storeToDisk();
 
-
-		// send some data
-		char buffer[10000];
-		int dataToSend = 1000;
-		if (send(_udpSocket, buffer, dataToSend, MSG_DONTWAIT) != dataToSend)
-		{
-			perror("send failed");
-		}
-	}
+	// Empty Buffer
+	_statistics.totalDataSize += _telemetryStream->_index;
+	_telemetryStream->Clear();
 }
 
 void TelemetryHandler::destroy()
@@ -65,3 +59,69 @@ void TelemetryHandler::destroy()
 	// kill stream
 	_telemetryStream.reset();
 }
+
+void TelemetryHandler::sendOverAir()
+{
+	// Send Data to socket
+	if (_udpSocket >= 0)
+	{
+		constexpr uint32_t MTU = 1450; // use low value to avoid fragmentation
+		uint32_t bufferIndex = 0; // current seek index in stream
+		uint32_t sendStartIndex = 0; // index in stream for begining of packet to send
+		uint32_t sendSize = 0; // total size of UDP packet to send
+		
+		do
+		{
+			// Read Header
+			TelemetryChunkHeader chunk = *reinterpret_cast<TelemetryChunkHeader*>(_telemetryStream->_databuffer.get() + bufferIndex);
+			uint32_t chunkSize = (sizeof(TelemetryChunkHeader) + chunk.size);
+
+			// Check if there is more room in packet to send
+			if ( (sendSize + chunkSize) <= MTU)
+			{
+				// put more chunks in packet
+				sendSize += chunkSize; // send this chunk
+				bufferIndex += chunkSize; // advance to next chunk
+			}
+			else
+			{
+				// Handle special case - chunk larger than MTU in first chunk to send
+				if (sendSize == 0)
+				{
+					// drop packet
+					_statistics.overSizedChunks++;
+
+					bufferIndex += chunkSize; // advance to next chunk	
+					sendSize = 0; // send nothing
+					sendStartIndex = bufferIndex; // restart									
+				}
+				else
+				{
+					char* bufferToSend = reinterpret_cast<char*>(_telemetryStream->_databuffer.get() + bufferIndex);
+					if (send(_udpSocket, bufferToSend, sendSize, MSG_DONTWAIT) != sendSize)
+					{
+						// error
+						_statistics.failedPackets++;
+						std::cout << "UDP Send Failed: " << std::endl;
+					}
+					else
+					{
+						_statistics.sentPackets++;
+						_statistics.totalSentToAir += sendSize;
+					}
+
+					// reset pointers
+					sendStartIndex = bufferIndex; // restart new packet
+					sendSize = 0; // reset size
+					// do not advance -> this packet could be larger than MTU
+				}
+			}
+		} while (bufferIndex <= _telemetryStream->_index);
+	}
+}
+
+void TelemetryHandler::storeToDisk()
+{
+	// TBD
+}
+
