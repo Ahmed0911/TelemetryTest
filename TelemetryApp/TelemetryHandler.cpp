@@ -97,7 +97,7 @@ void TelemetryHandler::sendOverAir()
 				}
 				else
 				{
-					char* bufferToSend = reinterpret_cast<char*>(_telemetryStream->_databuffer.get() + bufferIndex);
+					char* bufferToSend = reinterpret_cast<char*>(_telemetryStream->_databuffer.get() + sendStartIndex);
 					if (send(_udpSocket, bufferToSend, sendSize, MSG_DONTWAIT) != sendSize)
 					{
 						// error
@@ -116,7 +116,24 @@ void TelemetryHandler::sendOverAir()
 					// do not advance -> this packet could be larger than MTU
 				}
 			}
-		} while (bufferIndex <= _telemetryStream->_index);
+		} while (bufferIndex < _telemetryStream->_index);
+
+		// send last packet
+		if (sendSize != 0)
+		{
+			char* bufferToSend = reinterpret_cast<char*>(_telemetryStream->_databuffer.get() + sendStartIndex);
+			if (send(_udpSocket, bufferToSend, sendSize, MSG_DONTWAIT) != sendSize)
+			{
+				// error
+				_statistics.failedPackets++;
+				std::cout << "UDP Send Failed: " << std::endl;
+			}
+			else
+			{
+				_statistics.sentPackets++;
+				_statistics.totalSentToAir += sendSize;
+			}
+		}
 	}
 }
 

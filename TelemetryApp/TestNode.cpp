@@ -29,4 +29,12 @@ void TestNode::getTelemetryData(TelemetryStream& stream)
 
 	stream.writeToBuffer(&_data, sizeof(_data), objectID, 0 );
 	stream.writeToBuffer(&_data2, sizeof(_data2), objectID, 1 );
+
+	char junk[1000];
+	char junkExtra[1500];
+	stream.writeToBuffer(junk, 1000, objectID, 2);
+	stream.writeToBuffer(junk, 1000, objectID, 3);
+	stream.writeToBuffer(junk, 1500, objectID, 4);
+	stream.writeToBuffer(&_data, sizeof(_data), objectID, 0);
+	stream.writeToBuffer(junk, 1000, objectID, 2);
 }
