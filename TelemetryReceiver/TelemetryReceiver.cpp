@@ -1,6 +1,8 @@
 #include "TelemetryReceiver.h"
 #include <array>
 #include <iostream>
+typedef float  float32_t;
+typedef double float64_t;
 #include "TelemetryDataStructures.h"
 
 #if _WIN64
@@ -105,6 +107,56 @@ bool TelemetryReceiver::ReceiveData()
 					std::cout << " EngineLoadTimeUS: " << data.EngineLoadTimeUS << "      " << std::endl;
 					std::cout << " EngineDeserializeTimeUS: " << data.EngineDeserializeTimeUS << "      " << std::endl;
 					std::cout << " EngineExecutionTimeUS: " << data.EngineExecutionTimeUS << "      " << std::endl;
+					std::cout << std::endl;
+					break;
+				}
+				case NodeAIDriverAnalysisID:
+				{
+					NodeAIDriverAnalysisStatistics data = *reinterpret_cast<NodeAIDriverAnalysisStatistics*>(recvBuffer.data() + bufferIndex);
+					std::cout << "-------- NodeAIDriverAnalysis ----------" << std::endl;
+					std::cout << " ExecutionTimeUS: " << data.ExecutionTimeUS << "      " << std::endl;
+					std::cout << " nbScoreLive: " << data.nbScoreLive << "      " << std::endl;
+					std::cout << std::endl;
+					break;
+				}
+				case NodeStereoVisionID:
+				{
+					NodeStereoVisionStatistics data = *reinterpret_cast<NodeStereoVisionStatistics*>(recvBuffer.data() + bufferIndex);
+					std::cout << "-------- NodeStereoVision ----------" << std::endl;
+					std::cout << " Rectification_ExecutionTimeUS: " << data.Rectification_ExecutionTimeUS << "      " << std::endl;
+					std::cout << " Disparity_ExecutionTimeUS: " << data.Disparity_ExecutionTimeUS << "      " << std::endl;
+					std::cout << std::endl;
+					break;
+				}
+				case NodeSceneClassificationID:
+				{
+					NodeSceneClassificationStatistics data = *reinterpret_cast<NodeSceneClassificationStatistics*>(recvBuffer.data() + bufferIndex);
+					std::cout << "-------- NodeSceneClassification ----------" << std::endl;
+					std::cout << " BuildEngine_ExecutionTimeUS: " << data.BuildEngine_ExecutionTimeUS << "      " << std::endl;
+					std::cout << " DataPreparation_ExecutionTimeUS: " << data.DataPreparation_ExecutionTimeUS << "      " << std::endl;
+					std::cout << " Inference_ExecutionTimeUS: " << data.Inference_ExecutionTimeUS << "      " << std::endl;
+					std::cout << " timeOfDay: " << data.timeOfDay[0] << "/" << data.timeOfDay[1] << "/" << data.timeOfDay[2] << "      " << std::endl;
+					std::cout << " roadSurface: " << data.roadSurface[0] << "/" << data.roadSurface[1] << "/" << data.roadSurface[2] << "      " << std::endl;
+					std::cout << " weather: " << data.weather[0] << "/" << data.weather[1] << "/" << data.weather[2] << "      " << std::endl;
+					std::cout << " weatherState: " << data.weatherState[0] << "/" << data.weatherState[1] << "/" << data.weatherState[2] << "      " << std::endl;
+					std::cout << std::endl;
+					break;
+				}
+				case NodeMotionPlanningID:
+				{
+					NodeMotionPlanningStatistics data = *reinterpret_cast<NodeMotionPlanningStatistics*>(recvBuffer.data() + bufferIndex);
+					std::cout << "-------- NodeMotionPlanning ----------" << std::endl;
+					std::cout << " Initialization_ExecutionTimeUS: " << data.Initialization_ExecutionTimeUS << "      " << std::endl;
+					std::cout << " ExecutionTimeUS: " << data.ExecutionTimeUS << "      " << std::endl;
+					std::cout << std::endl;
+					break;
+				}
+				case NodeSFMID:
+				{
+					NodeSFMStatistics data = *reinterpret_cast<NodeSFMStatistics*>(recvBuffer.data() + bufferIndex);
+					std::cout << "-------- NodeSFM ----------" << std::endl;
+					std::cout << " overal_ExecutionTimeUS: " << data.overal_ExecutionTimeUS << "      " << std::endl;
+					std::cout << " tracking_ExecutionTimeUS: " << data.tracking_ExecutionTimeUS << "      " << std::endl;
 					std::cout << std::endl;
 					break;
 				}

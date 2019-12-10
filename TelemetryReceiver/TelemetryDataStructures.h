@@ -57,3 +57,48 @@ struct NodePudzaStatistics
 	uint64_t EngineDeserializeTimeUS;
 	uint64_t EngineExecutionTimeUS;
 };
+
+// Node AI Driver Analysis
+constexpr uint32_t NodeAIDriverAnalysisID = 0x400;
+struct NodeAIDriverAnalysisStatistics
+{
+	uint64_t ExecutionTimeUS;
+	uint32_t nbScoreLive;
+};
+
+// Node Stereo Vision
+constexpr uint32_t NodeStereoVisionID = 0x401;
+struct NodeStereoVisionStatistics
+{
+	uint64_t Rectification_ExecutionTimeUS;
+	uint64_t Disparity_ExecutionTimeUS;
+};
+
+// Node Scene Classification
+constexpr uint32_t NodeSceneClassificationID = 0x402;
+struct NodeSceneClassificationStatistics
+{
+	uint64_t BuildEngine_ExecutionTimeUS;
+	uint64_t DataPreparation_ExecutionTimeUS;
+	uint64_t Inference_ExecutionTimeUS;
+	float32_t timeOfDay[3];
+	float32_t roadSurface[3];
+	float32_t weather[3];
+	float32_t weatherState[3];
+};
+
+// Node Motion Planning
+constexpr uint32_t NodeMotionPlanningID = 0x403;
+struct NodeMotionPlanningStatistics
+{
+	uint64_t Initialization_ExecutionTimeUS;
+	uint64_t ExecutionTimeUS;
+};
+
+// Node Structure From Motion
+constexpr uint32_t NodeSFMID = 0x404;
+struct NodeSFMStatistics
+{
+	uint64_t overal_ExecutionTimeUS;
+	uint64_t tracking_ExecutionTimeUS;
+};
