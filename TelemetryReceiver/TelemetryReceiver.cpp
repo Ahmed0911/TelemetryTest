@@ -66,7 +66,7 @@ bool TelemetryReceiver::ReceiveData()
 				case ApplicationID:
 				{
 					ApplicationStatistics data = *reinterpret_cast<ApplicationStatistics*>(recvBuffer.data() + bufferIndex);
-					std::cout << "-------- Applications ----------" << std::endl;
+					std::cout << "-------- Application ----------" << std::endl;
 					std::cout << " mainLoopCounter: " << data.mainLoopCounter << "      " << std::endl;
 					std::cout << " mainLoopTimeUS: " << data.mainLoopTimeUS << "      " << std::endl;
 					std::cout << " commThreadPeriodUS: " << data.commThreadPeriodUS << "      " << std::endl;
