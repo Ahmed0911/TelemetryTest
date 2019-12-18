@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <array>
 #define SERVERPORT 13000
 
 struct TelemetryChunkHeader
@@ -19,4 +20,7 @@ public:
 
 private:
 	int _udpSocket = -1;
+	int _udpSocketForwarder = -1;
+
+	void ForwardPacket(std::array<char, 2000>& recvBuffer, uint32_t dataLen);
 };

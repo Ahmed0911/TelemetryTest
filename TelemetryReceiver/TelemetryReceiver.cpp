@@ -6,6 +6,7 @@ typedef double float64_t;
 #include "TelemetryDataStructures.h"
 
 #if _WIN64
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <winsock2.h>
 #define close closesocket
 #else
@@ -14,6 +15,9 @@ typedef double float64_t;
 #include <unistd.h>
 #endif
 
+#define DESTINATIONADDR "192.168.5.185"
+
+
 TelemetryReceiver::TelemetryReceiver()
 {
 	// create socket
@@ -21,6 +25,14 @@ TelemetryReceiver::TelemetryReceiver()
 	if (_udpSocket == -1)
 	{
 		perror("socket create failed");
+		return;
+	}
+
+	// create forwarder socket
+	_udpSocketForwarder = socket(AF_INET, SOCK_DGRAM, 0);
+	if (_udpSocket == -1)
+	{
+		perror("socket forwarder create failed");
 		return;
 	}
 
@@ -39,9 +51,28 @@ TelemetryReceiver::TelemetryReceiver()
 TelemetryReceiver::~TelemetryReceiver()
 {
 	// close socket
+	if (_udpSocketForwarder != -1)
+	{
+		close(_udpSocketForwarder);
+	}
+
+	// close socket
 	if (_udpSocket != -1)
 	{
 		close(_udpSocket);
+	}
+}
+
+void TelemetryReceiver::ForwardPacket(std::array<char, 2000>& sendBuffer, uint32_t dataLen)
+{
+	if (_udpSocketForwarder != -1)
+	{
+		sockaddr_in destinationAddr{};
+		destinationAddr.sin_family = AF_INET;
+		destinationAddr.sin_port = htons(SERVERPORT); // listening port
+		destinationAddr.sin_addr.s_addr = inet_addr(DESTINATIONADDR);
+
+		sendto(_udpSocketForwarder, sendBuffer.data(), dataLen, 0, reinterpret_cast<sockaddr*>(&destinationAddr), sizeof(destinationAddr));
 	}
 }
 
@@ -51,10 +82,14 @@ bool TelemetryReceiver::ReceiveData()
 
 	int32_t received = recv(_udpSocket, recvBuffer.data(), 2000, 0);
 
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { 0,0 });
 	// parse data
 	if (received > 0)
 	{
+		// forward packets
+		ForwardPacket(recvBuffer, received);
+		
+		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { 0,0 });
+
 		int32_t bufferIndex = 0;
 		while (bufferIndex < received)
 		{
@@ -100,16 +135,6 @@ bool TelemetryReceiver::ReceiveData()
 					std::cout << std::endl;
 					break;
 				}
-				case NodePudzaID:
-				{
-					NodePudzaStatistics data = *reinterpret_cast<NodePudzaStatistics*>(recvBuffer.data() + bufferIndex);
-					std::cout << "-------- NodePudza ----------" << std::endl;
-					std::cout << " EngineLoadTimeUS: " << data.EngineLoadTimeUS << "      " << std::endl;
-					std::cout << " EngineDeserializeTimeUS: " << data.EngineDeserializeTimeUS << "      " << std::endl;
-					std::cout << " EngineExecutionTimeUS: " << data.EngineExecutionTimeUS << "      " << std::endl;
-					std::cout << std::endl;
-					break;
-				}
 				case NodeAIDriverAnalysisID:
 				{
 					NodeAIDriverAnalysisStatistics data = *reinterpret_cast<NodeAIDriverAnalysisStatistics*>(recvBuffer.data() + bufferIndex);
@@ -130,6 +155,7 @@ bool TelemetryReceiver::ReceiveData()
 				}
 				case NodeSceneClassificationID:
 				{
+					/*
 					NodeSceneClassificationStatistics data = *reinterpret_cast<NodeSceneClassificationStatistics*>(recvBuffer.data() + bufferIndex);
 					std::cout << "-------- NodeSceneClassification ----------" << std::endl;
 					std::cout << " BuildEngine_ExecutionTimeUS: " << data.BuildEngine_ExecutionTimeUS << "      " << std::endl;
@@ -140,6 +166,7 @@ bool TelemetryReceiver::ReceiveData()
 					std::cout << " weather: " << data.weather[0] << "/" << data.weather[1] << "/" << data.weather[2] << "      " << std::endl;
 					std::cout << " weatherState: " << data.weatherState[0] << "/" << data.weatherState[1] << "/" << data.weatherState[2] << "      " << std::endl;
 					std::cout << std::endl;
+					*/
 					break;
 				}
 				case NodeMotionPlanningID:
