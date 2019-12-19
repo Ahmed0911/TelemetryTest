@@ -3,6 +3,7 @@
 #include <iostream>
 typedef float  float32_t;
 typedef double float64_t;
+#include <fstream>
 #include "TelemetryDataStructures.h"
 
 #if _WIN64
@@ -125,7 +126,7 @@ bool TelemetryReceiver::ReceiveData()
 				case CameraCaptureID:
 				{
 					CameraCaptureStatistics data = *reinterpret_cast<CameraCaptureStatistics*>(recvBuffer.data() + bufferIndex);
-					std::cout << "-------- CameraCapture ----------" << std::endl;
+					/*std::cout << "-------- CameraCapture ----------" << std::endl;
 					std::cout << " completeOutputs: " << data.completeOutputs << "      " << std::endl;
 					std::cout << " incompleteOutputs: " << data.incompleteOutputs << "      " << std::endl;
 					std::cout << " thrashedOutputs: " << data.thrashedOutputs << "      " << std::endl;
@@ -135,7 +136,32 @@ bool TelemetryReceiver::ReceiveData()
 					std::cout << " desyncFrames: " << data.oldFrames << "      " << std::endl;
 					std::cout << " nextFrames: " << data.nextFrames << "      " << std::endl;
 					std::cout << " frameLatencyUS[0]: " << data.frameLatencyUS[0] << "      " << std::endl;
+					std::cout << std::endl;*/
+					break;
+				}
+				case CameraEncoderID:
+				{
+					CameraEncoderStatistics data = *reinterpret_cast<CameraEncoderStatistics*>(recvBuffer.data() + bufferIndex);
+					std::cout << "-------- CameraEncoder ----------" << std::endl;
+					std::cout << " encodingTimeUS: " << data.encodingTimeUS << "      " << std::endl;
+					std::cout << " feedFrames: " << data.feedFrames << "      " << std::endl;
+					std::cout << " encodedFrames: " << data.encodedFrames << "      " << std::endl;
+					std::cout << " encodingErrors: " << data.encodingErrors << "      " << std::endl;
+					std::cout << " totalDataSize: " << data.totalDataSize << "      " << std::endl;
 					std::cout << std::endl;
+					break;
+				}
+				case CameraEncoderImageID:
+				{
+					uint32_t size = chunk.size;
+					uint32_t index = chunk.index;
+					const char* buffer = (recvBuffer.data() + bufferIndex);
+					std::cout << "-------- CameraEncoderImage ----------" << std::endl;
+					std::cout << " index: " << index << "      " << std::endl;
+					std::cout << " size: " << size << "      " << std::endl;
+					std::cout << std::endl;
+					std::ofstream  outFile(L"testfile.h264", std::ios::binary | std::ios::app);
+					outFile.write(buffer, size);
 					break;
 				}
 				case NodeAIDriverAnalysisID:

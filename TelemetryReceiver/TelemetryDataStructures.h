@@ -71,7 +71,7 @@ struct CameraEncoderStatistics
 	uint64_t totalDataSize;
 	uint64_t encodingTimeUS;
 };
-constexpr uint32_t CameraEncoderImageID = 0x300;
+constexpr uint32_t CameraEncoderImageID = 0x301;
 
 // Node AI Driver Analysis
 constexpr uint32_t NodeAIDriverAnalysisID = 0x400;
