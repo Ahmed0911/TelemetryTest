@@ -15,7 +15,7 @@ typedef double float64_t;
 #include <unistd.h>
 #endif
 
-#define DESTINATIONADDR "192.168.5.185"
+#define DESTINATIONADDR "192.168.40.37"
 
 
 TelemetryReceiver::TelemetryReceiver()
@@ -131,6 +131,9 @@ bool TelemetryReceiver::ReceiveData()
 					std::cout << " thrashedOutputs: " << data.thrashedOutputs << "      " << std::endl;
 					std::cout << " validFrames: " << data.validFrames << "      " << std::endl;
 					std::cout << " desyncFrames: " << data.desyncFrames << "      " << std::endl;
+					std::cout << " nearFutureFrames: " << data.nearFutureFrames << "      " << std::endl;
+					std::cout << " desyncFrames: " << data.oldFrames << "      " << std::endl;
+					std::cout << " nextFrames: " << data.nextFrames << "      " << std::endl;
 					std::cout << " frameLatencyUS[0]: " << data.frameLatencyUS[0] << "      " << std::endl;
 					std::cout << std::endl;
 					break;
