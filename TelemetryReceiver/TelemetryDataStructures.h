@@ -48,15 +48,30 @@ struct CameraCaptureStatistics
 	std::array<int64_t, CAM_CAPTURE_OUTPUT_SIZE> frameLatencyUS{}; // Delay from acquisition (readFrame) to frame time-stamp
 };
 
-
-// Node Pudza
-constexpr uint32_t NodePudzaID = 0x300;
-struct NodePudzaStatistics
+// Sensors Capture
+constexpr uint32_t SensorsCaptureID = 0x210;
+struct SensorsCaptureStatistics
 {
-	uint64_t EngineLoadTimeUS;
-	uint64_t EngineDeserializeTimeUS;
-	uint64_t EngineExecutionTimeUS;
+	uint32_t canMessagesRead;
+	uint32_t canMessagesProcessed;
+	uint32_t canUnknownSignals;
+	uint32_t canMessagesSent;
+	uint32_t canMessagesFailed;
 };
+constexpr uint32_t SensorsCaptureDataKiaID = 0x211; // Use "SensorsKiaData" in SensorsCapture.h
+constexpr uint32_t SensorsCaptureDataIMUID = 0x212; // Use "SensorsIMUData" in SensorsCapture.h
+
+// Camera Encoder
+constexpr uint32_t CameraEncoderID = 0x300;
+struct CameraEncoderStatistics
+{
+	uint32_t feedFrames;
+	uint32_t encodedFrames;
+	uint32_t encodingErrors;
+	uint64_t totalDataSize;
+	uint64_t encodingTimeUS;
+};
+constexpr uint32_t CameraEncoderImageID = 0x300;
 
 // Node AI Driver Analysis
 constexpr uint32_t NodeAIDriverAnalysisID = 0x400;
@@ -102,3 +117,4 @@ struct NodeSFMStatistics
 	uint64_t overal_ExecutionTimeUS;
 	uint64_t tracking_ExecutionTimeUS;
 };
+
